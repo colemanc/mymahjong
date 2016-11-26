@@ -1,7 +1,6 @@
 from tkinter import *
-
 import mahjong_controller
-
+from guibuilder import ResizableCanvas
 from PIL import ImageTk, Image
 
 class MahjongView(Frame):
@@ -9,11 +8,22 @@ class MahjongView(Frame):
         Frame.__init__(self, parent)
         self.parent = parent
         self.controller = controller
-        #parent.title("My Mahjong")
+        self.showImg
         #self.fixFonts()
-        self.grid()
+        #self.grid()
         #parent.title("Mahjong")
         #self.create_board(1)
+
+    def showImg(self):
+        load = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
+
+        #load = Image.open("chat.png")
+        render = ImageTk.PhotoImage(load)
+
+        # labels can be text or images
+        img = Label(self, image=render)
+        img.image = render
+        img.place(x=0, y=0)
 
 
     def create_board(self, board_num):
@@ -22,30 +32,37 @@ class MahjongView(Frame):
         screen_height = self.winfo_screenheight()
         screen_width = self.winfo_screenwidth()
 
-        #print(screen_height)
-        #print(screen_width)
-        #self_class = self.__class__
-        #print(self_class.__bases__)
-        self.a_label = Label(self, text = "Game Board " + str(board_num))
-        self.a_label.grid(row = 0, column = 0)
-        #tiles_image = Image(file="../kyodaiTileSets/real-tiles.jpg", imgtype="jpg")
-        tiles_image = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
-        print(tiles_image.format, tiles_image.size, tiles_image.mode)
-        #self.image_label = Label(self, image=tiles_image)
-        #self.image_label.grid(row=1,column=0)
+        load = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
+        render = ImageTk.PhotoImage(load)
 
-        #im = Image.open('test_image.jpg')
-# Put the image into a canvas compatible class, and stick in an
-# arbitrary variable to the garbage collector doesn't destroy it
-        self.canvas = Canvas(self, width=(screen_width*.8),height=(screen_height*.8))
+        # labels can be text or images
+        img = Label(self, image=render)
+        img.image = render
+        img.place(x=400, y=500)
+                #self.a_label = Label(self, text = "Game Board " + str(board_num))
+    #elf.a_label.grid(row = 0, column = 0)
 
-        self.canvas.image = ImageTk.PhotoImage(tiles_image)
-# Add the image to the canvas, and set the anchor to the top left / north west corner
-        self.canvas.create_image(0, 0, image=self.canvas.image, anchor='nw')
+        #width_org, height_org = raw_image.size
+        #factor = floor(screen_height/height_org)
+        #print(width_org, height_org, factor)
+
+        #background_image = raw_image.resize((width_org*factor, height_org*factor), Image.ANTIALIAS)
+        #print(background_image.size)
+        #mycanvas = Canvas(self, width=(screen_width),height=(screen_height), bg="blue", highlightthickness=0)
+        #mycanvas = Canvas(self, width=(screen_width),height=(screen_height), bg="blue", highlightthickness=0)
+        #mycanvas.pack(fill=BOTH, expand=YES)
+        # raw_image = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
+        # tiles_image = ImageTk.PhotoImage(raw_image)
+        # widget = Label(self, image=tiles_image)
+        # #widget.pack(side = "bottom", fill = "both", expand = "yes")
+        # widget.place(x=0, y=0)
+        #             #    crop_rectangle = (50, 50, 200, 200)
+    #    cropped_im = tiles_image.crop(crop_rectangle)
+    #    print(cropped_im.size)
+        #background = self.canvas.create_image(0, 0, image=self.canvas.image, anchor='nw')
+        #mycanvas.create_window(400, 400, window=widget)
 
 
-
-        self.canvas.grid(row=0, column=0)
         #self.canvas.create_rectangle(0,0,150,150, fill="blue")
 
     def getBoardNumbers(board_num):

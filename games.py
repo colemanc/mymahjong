@@ -4,6 +4,8 @@ from math import floor
 
 from PIL import ImageTk, Image
 TITLE_FONT = ("Helvetica", 18, "bold")
+from guibuilder import ResizableCanvas
+
 
 class Games(tk.Tk):
 
@@ -42,22 +44,27 @@ class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        self.parent = parent
         print("in init for startpage")
         self.controller = controller
         self.showImg()
 
-
     def showImg(self):
         print("in showImg")
-        load = Image.open("/home/cynthia/project/mymahjong/butterfly640.jpg")
+        raw_image = Image.open("/home/cynthia/project/mymahjong/butterfly640.jpg")
+        screen_height = self.winfo_screenheight()
+        screen_width = self.winfo_screenwidth()
+        width_org, height_org = raw_image.size
+        factor = floor(screen_height/height_org)
+        print(width_org, height_org, factor)
 
-        #load = Image.open("chat.png")
-        render = ImageTk.PhotoImage(load)
-
+        image = raw_image.resize((width_org*factor, height_org*factor), Image.ANTIALIAS)
+        photoImg = ImageTk.PhotoImage(image)
+        #render.zoom(scale_w, scale_h)
         # labels can be text or images
-        img = Label(self, image=render)
-        img.image = render
-        img.place(x=0, y=0)
+        label_img = Label(self, image=photoImg)
+        label_img.image = photoImg
+        label_img.place(x=0, y=0)
 
 
 

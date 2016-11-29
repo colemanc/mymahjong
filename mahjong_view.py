@@ -12,7 +12,7 @@ class MahjongView(Frame):
         #self.fixFonts()
         #self.grid()
         #parent.title("Mahjong")
-        #self.create_board(1)
+        self.create_board(1)
 
     def showImg(self):
         load = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")

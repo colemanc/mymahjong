@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import *
 from math import floor
-
+from mahjong_view import *
+from mahjong_controller import *
 from PIL import ImageTk, Image
+from tkinter.font import Font, nametofont
+
 TITLE_FONT = ("Helvetica", 18, "bold")
 from guibuilder import ResizableCanvas
 
@@ -23,12 +26,27 @@ class Games(tk.Tk):
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
+        self.fixFonts()
+        #self.grid()
+        #self.pack()
+        self.title("Games")
+        self.add_main_menu()
 
         self.frames = {}
         page_name = StartPage.__name__
         frame = StartPage(parent=self.container, controller=self)
         self.add_frame(frame, page_name)
         self.show_frame("StartPage")
+        # page_name = PageOne.__name__
+        # frame = PageOne(parent=self.container, controller=self)
+        # self.add_frame(frame, page_name)
+        # self.show_frame("PageOne")
+
+    def play_mahjong(self):
+        page_name = MahjongView.__name__
+        frame = MahjongView(parent=self.container, controller=MahjongController)
+        self.add_frame(frame, page_name)
+        self.show_frame("MahjongView")
 
     def add_frame(self, new_frame, page_name):
         self.frames[page_name] = new_frame
@@ -38,6 +56,49 @@ class Games(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+
+    def fixFonts(self):
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+    #    print(screen_height)
+#        print(screen_width)
+        self.default_font = nametofont('TkDefaultFont')
+#        print(self.default_font.actual())
+        self.default_font.configure(size=16)
+#        print(self.default_font.actual())
+
+        self.menu_font = nametofont('TkMenuFont')
+#        print(self.menu_font.actual())
+
+        self.menu_font.configure(size=36)
+#        print(self.menu_font.actual())
+
+
+    def add_main_menu(self):
+        self.main_menu = Menu(self)
+        self.add_game_menu()
+        self.add_help_menu()
+
+    def add_game_menu(self):
+        self.game_menu = Menu(self.main_menu, tearoff=0)
+        self.game_menu.add_command(label="New Mahjong Game", command=self.play_mahjong)
+        self.game_menu.add_command(label="Exit", command=self.quit)
+        self.main_menu.add_cascade(label="Games", menu=self.game_menu)
+        self.config(menu=self.main_menu)
+
+    def add_help_menu(self):
+        self.help_menu = Menu(self.main_menu, tearoff=1)
+        self.help_menu.add_command(label="About...", command=self.about)
+        self.main_menu.add_cascade(label="Help", menu=self.help_menu)
+        self.config(menu=self.main_menu)
+
+    def quit(self):
+       sys.exit(0)
+
+    def about(self):
+        print("This is a simple mahjong game that keeps track of board numbers.")
+
+
 
 
 class StartPage(tk.Frame):
@@ -50,12 +111,13 @@ class StartPage(tk.Frame):
         self.showImg()
 
     def showImg(self):
-        print("in showImg")
+
         raw_image = Image.open("/home/cynthia/project/mymahjong/butterfly640.jpg")
-        screen_height = self.winfo_screenheight()
-        screen_width = self.winfo_screenwidth()
         width_org, height_org = raw_image.size
-        factor = floor(screen_height/height_org)
+
+        #factor = floor(screen_height/height_org)
+        factor = 1
+        #print(screen_width, screen_height)
         print(width_org, height_org, factor)
 
         image = raw_image.resize((width_org*factor, height_org*factor), Image.ANTIALIAS)

@@ -23,12 +23,14 @@ class Games(tk.Tk):
         #self.container.width=floor(screen_width*.8)
         #self.container.height=floor(screen_height*.8)
 
-        self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
         self.fixFonts()
-        #self.grid()
-        #self.pack()
+        self.container.pack(side="top", fill="both", expand=True)
+        #self.container.pack()
+        #this is necessary in order to get the right height measurements - stupid python!
+        self.update_idletasks()
+        #print(self.container.winfo_height())
         self.title("Games")
         self.add_main_menu()
 
@@ -87,7 +89,7 @@ class Games(tk.Tk):
         self.config(menu=self.main_menu)
 
     def add_help_menu(self):
-        self.help_menu = Menu(self.main_menu, tearoff=1)
+        self.help_menu = Menu(self.main_menu, tearoff=0)
         self.help_menu.add_command(label="About...", command=self.about)
         self.main_menu.add_cascade(label="Help", menu=self.help_menu)
         self.config(menu=self.main_menu)
@@ -97,9 +99,6 @@ class Games(tk.Tk):
 
     def about(self):
         print("This is a simple mahjong game that keeps track of board numbers.")
-
-
-
 
 class StartPage(tk.Frame):
 
@@ -113,16 +112,24 @@ class StartPage(tk.Frame):
     def showImg(self):
 
         raw_image = Image.open("/home/cynthia/project/mymahjong/butterfly640.jpg")
-        width_org, height_org = raw_image.size
-
-        #factor = floor(screen_height/height_org)
-        factor = 1
-        #print(screen_width, screen_height)
-        print(width_org, height_org, factor)
-
-        image = raw_image.resize((width_org*factor, height_org*factor), Image.ANTIALIAS)
+        #width_org, height_org = raw_image.size
+        #print(width_org, height_org)
+        frame_width = self.parent.winfo_width()
+        frame_height = self.parent.winfo_height()
+        #print(frame_height)
+        #factor = frame_height/height_org
+        #factor = 1
+        #print(screen_iwidth, screen_height)
+        #print(factor)
+        image = raw_image.resize((frame_width,frame_height), Image.ANTIALIAS)
         photoImg = ImageTk.PhotoImage(image)
+        #photoImg = photoImg.zoom(factor, factor)
+
         #render.zoom(scale_w, scale_h)
+        #print(self.__class__.__bases__)
+        #print(dir(self))
+        #print(self.parent.__class__)
+        #print(self.winfo_vrootheight())
         # labels can be text or images
         label_img = Label(self, image=photoImg)
         label_img.image = photoImg

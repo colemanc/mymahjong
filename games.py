@@ -18,35 +18,27 @@ class Games(tk.Tk):
         screen_width = self.winfo_screenwidth()
         self.geometry("%dx%d+%d+%d" % (screen_width*.8, screen_height*.8, screen_width*.05, screen_height*.05))
 
-        self.container = tk.Frame(self)
-        #tk.geometry("%dx%d+0+0" % (screen_width, screen_height))
-        #self.container.width=floor(screen_width*.8)
-        #self.container.height=floor(screen_height*.8)
-
-        self.container.grid_rowconfigure(0, weight=1)
-        self.container.grid_columnconfigure(0, weight=1)
+        # self.container = tk.Frame(self)
+        # self.container.grid_rowconfigure(0, weight=1)
+        # self.container.grid_columnconfigure(0, weight=1)
         self.fixFonts()
-        self.container.pack(side="top", fill="both", expand=True)
-        #self.container.pack()
+        # self.container.pack(side="top", fill="both", expand=True)
         #this is necessary in order to get the right height measurements - stupid python!
         self.update_idletasks()
-        #print(self.container.winfo_height())
         self.title("Games")
         self.add_main_menu()
 
         self.frames = {}
         page_name = StartPage.__name__
-        frame = StartPage(parent=self.container, controller=self)
+        #frame = StartPage(parent=self.container, controller=self)
+        frame = StartPage(parent=self, controller=self)
         self.add_frame(frame, page_name)
         self.show_frame("StartPage")
-        # page_name = PageOne.__name__
-        # frame = PageOne(parent=self.container, controller=self)
-        # self.add_frame(frame, page_name)
-        # self.show_frame("PageOne")
+
 
     def play_mahjong(self):
         page_name = MahjongView.__name__
-        frame = MahjongView(parent=self.container, controller=MahjongController)
+        frame = MahjongView(parent=self, controller=MahjongController)
         self.add_frame(frame, page_name)
         self.show_frame("MahjongView")
 
@@ -62,18 +54,18 @@ class Games(tk.Tk):
     def fixFonts(self):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
-    #    print(screen_height)
-#        print(screen_width)
+        #print(screen_height)
+        #print(screen_width)
         self.default_font = nametofont('TkDefaultFont')
-#        print(self.default_font.actual())
+        #print(self.default_font.actual())
         self.default_font.configure(size=16)
-#        print(self.default_font.actual())
+        #print(self.default_font.actual())
 
         self.menu_font = nametofont('TkMenuFont')
-#        print(self.menu_font.actual())
+        #print(self.menu_font.actual())
 
         self.menu_font.configure(size=36)
-#        print(self.menu_font.actual())
+        #print(self.menu_font.actual())
 
 
     def add_main_menu(self):
@@ -104,10 +96,16 @@ class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        # self.parent = parent
+        # print("in init for startpage")
+        # self.controller = controller
+        # self.showImg()
         self.parent = parent
-        print("in init for startpage")
         self.controller = controller
+        self.pack(fill=BOTH, expand=YES)
+        self.update_idletasks()
         self.showImg()
+
 
     def showImg(self):
 
@@ -116,26 +114,13 @@ class StartPage(tk.Frame):
         #print(width_org, height_org)
         frame_width = self.parent.winfo_width()
         frame_height = self.parent.winfo_height()
-        #print(frame_height)
-        #factor = frame_height/height_org
-        #factor = 1
-        #print(screen_iwidth, screen_height)
-        #print(factor)
-        image = raw_image.resize((frame_width,frame_height), Image.ANTIALIAS)
-        photoImg = ImageTk.PhotoImage(image)
-        #photoImg = photoImg.zoom(factor, factor)
-
-        #render.zoom(scale_w, scale_h)
-        #print(self.__class__.__bases__)
-        #print(dir(self))
-        #print(self.parent.__class__)
-        #print(self.winfo_vrootheight())
-        # labels can be text or images
+        raw_image = raw_image.resize((frame_width,frame_height), Image.ANTIALIAS)
+        photoImg = ImageTk.PhotoImage(raw_image)
         label_img = Label(self, image=photoImg)
         label_img.image = photoImg
-        label_img.place(x=0, y=0)
+        label_img.pack()
 
-
+        #label_img.place(x=0, y=0)
 
 class PageOne(tk.Frame):
 

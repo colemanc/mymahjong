@@ -1,44 +1,53 @@
+import tkinter as tk
 from tkinter import *
 import mahjong_controller
 from guibuilder import ResizableCanvas
 from PIL import ImageTk, Image
 
-class MahjongView(Frame):
+class MahjongView(tk.Frame):
+
     def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent)
         self.parent = parent
         self.controller = controller
-        self.showImg
-        #self.fixFonts()
-        #self.grid()
-        #parent.title("Mahjong")
+        self.pack(fill=BOTH, expand=YES)
+        self.update_idletasks()
         self.create_board(1)
-
-    def showImg(self):
-        load = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
-
-        #load = Image.open("chat.png")
-        render = ImageTk.PhotoImage(load)
-
-        # labels can be text or images
-        img = Label(self, image=render)
-        img.image = render
-        img.place(x=0, y=0)
 
 
     def create_board(self, board_num):
 
         #board_array = getBoardNumbers(board_num)
-        screen_height = self.winfo_screenheight()
-        screen_width = self.winfo_screenwidth()
 
-        load = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
-        render = ImageTk.PhotoImage(load)
+        frame_width = self.parent.winfo_width()
+        frame_height = self.parent.winfo_height()
+       # self.update_idletasks()
+        print(frame_height, frame_width)
 
-        # labels can be text or images
-        img = Label(self, image=render)
-        img.image = render
-        img.place(x=400, y=500)
+        image = Image.open("/home/cynthia/project/mymahjong/kyodaiTileSets/real-tiles.jpg")
+        mycanvas = ResizableCanvas(self, width=(frame_width),height=(frame_height), bg="blue", highlightthickness=0)
+        #mycanvas.pack(fill=BOTH, expand=YES)
+        mycanvas.grid(row=0, column=0, sticky='nesw')
+        mycanvas.columnconfigure(0, weight=1)
+        mycanvas.rowconfigure(0, weight=1)
+
+        # fill the canvas
+        self.tile = {}
+        self.tilesize = tilesize = 32
+        xsize, ysize = image.size
+        for x in range(0, round(xsize / 10), tilesize):
+            for y in range(0, ysize, tilesize):
+                box = x, y, min(xsize, x + tilesize), min(ysize, y + tilesize)
+                tile = ImageTk.PhotoImage(image.crop(box))
+                mycanvas.create_image(x * 2, y * 6, image=tile, anchor=NW)
+                self.tile[(x, y)] = box, tile
+
+        self.image = image
+
+        # # labels can be text or images
+        # img = Label(self, image=render)
+        # img.image = render
+        # img.place(x=400, y=500)
                 #self.a_label = Label(self, text = "Game Board " + str(board_num))
     #elf.a_label.grid(row = 0, column = 0)
 
@@ -72,10 +81,13 @@ class MahjongView(Frame):
 #these only are used if you want to just run this game straight up
 ####################################################################
 
-def main(controller):
+def main():
     root = Tk()
     root.title("Mahjong")
-    MahjongView(root, controller)
+    screen_height = root.winfo_screenheight()
+    screen_width = root.winfo_screenwidth()
+    root.geometry("%dx%d+%d+%d" % (screen_width * .8, screen_height * .8, screen_width * .05, screen_height * .05))
+    MahjongView(root, mahjong_controller.MahjongController())
     root.mainloop()
 
 
@@ -84,4 +96,5 @@ def init_new_game():
     main(game_controller)
 
 if __name__ == "__main__":
-    init_new_game()
+    #init_new_game()
+    main()
